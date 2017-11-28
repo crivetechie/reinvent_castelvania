@@ -63,12 +63,12 @@ Resources:
             - Name: Tag
               Value: !Ref Tag
             - Name: AWS_RENTAL_SQS_QUEUE
-              Value: "Get-This-From-Dashboard"
+              Value: "https://sqs.us-west-2.amazonaws.com/930038209161/Asteroids-module-modernizeourrentalreturnqueueprocessor"
             - Name: UNICORN_RENTAL_RETURN_ENDPOINT
-              Value: "Get-This-From-Dashboard"
+              Value: "https://skygh32ukf.execute-api.us-west-2.amazonaws.com/v1"
             - Name: REDIS_URL
-              Value: "Get-This-From-Dashboard"
+              Value: "redis://unicorn-rentals.tpgrek.0001.usw2.cache.amazonaws.com:6379"
             - Name: AWS_DEFAULT_REGION
-              Value: "Your-Game-Region"
+              Value: "us-west-2"
       Volumes:
         - Name: my-vol
