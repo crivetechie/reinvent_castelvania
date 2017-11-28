@@ -1,22 +1,12 @@
-############################################
-# Dockerfile to build Sample Application
-# For AWS ECS Service
-############################################
+# Trials w/ py3.4
+# FROM python:3
+FROM python:2.7-alpine
 
-## Set base image to python
-FROM node:8.7.0-alpine
+WORKDIR /usr/src/app
 
-# File Author / Maintainer
-MAINTAINER Timmy Timm
+COPY requirements.txt ./
+RUN pip install --no-cache-dir -r requirements.txt
 
-# Copy source file and python req's
-COPY . /usr/src/app/
+COPY . .
 
-WORKDIR /usr/src/app/
-
-# Install requirements
-RUN npm install
-
-EXPOSE 8088
-
-CMD ["node", "/usr/src/app/app.js"]
+ENTRYPOINT [ "python", "./app.py" ]
