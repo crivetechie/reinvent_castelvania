@@ -3,7 +3,7 @@
 # For AWS ECS Service
 ############################################
 
-# Set base image to python
+## Set base image to python
 FROM node:8.7.0-alpine
 
 # File Author / Maintainer
