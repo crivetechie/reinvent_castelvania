@@ -19,8 +19,8 @@ Parameters:
   ECSServiceRole:
     Type: String
 
-Resources:
 
+Resources:
   Service:
     Type: AWS::ECS::Service
     Properties:
@@ -33,6 +33,12 @@ Resources:
           ContainerPort: 8088
           TargetGroupArn: !Ref TargetGroup
 
+  PaperBoyLogs:
+    Type: "AWS::Logs::LogGroup"
+    Properties:
+      LogGroupName: !Sub "${Cluster}"
+      RetentionInDays: 1
+
   TaskDefinition:
     Type: AWS::ECS::TaskDefinition
     Properties:
@@ -42,6 +48,12 @@ Resources:
           Image: !Sub ${AWS::AccountId}.dkr.ecr.${AWS::Region}.amazonaws.com/${Repository}:${Tag}
           Essential: true
           Memory: 128
+          LogConfiguration :
+            LogDriver: awslogs
+            Options:
+              awslogs-group: !Ref PaperBoyLogs
+              awslogs-region: !Ref AWS::Region
+              awslogs-stream-prefix: "paperboy-processor"
           MountPoints:
             - SourceVolume: my-vol
               ContainerPath: /var/www/my-vol
@@ -50,9 +62,13 @@ Resources:
           Environment:
             - Name: Tag
               Value: !Ref Tag
-            - Name: fortytwo
-              Value: WkJEOHhlRkRjc2NlVHJleTRiRGxLKzYySldJQlYrMDhXQ0ZDNUUxWk9mUzZGS2d3Mjh4RnpUVzZPVjkySDlKL0JaeWNmR05waitRcUhOWm5PQkNpczlBNHN0eW9BM3RqZWtqMlY2cUtIL3pReHY1VlRaU3pLeXZYOEp4aW9SUndTRVNwVG9xNGZiSHVic1VJVkJBYmlQMVBqUm00UHpLZkYwT1VKSTEyWlkyK1k0Y0NiMFp3UVdTbnFHS0NYNHd4amtJZ3g1U2UyWU9MYWhxekJEOFhzTk1PNUZ0aWxrdkMrcXhqc3NkaDhZaDc4cHo0dW9rcFR0VVVhS2Q1WUdnZGt5eHcxOG0zTGYzeGwyeVVlZU1wU0QvaHkwcnRob3V1cFJuWlFKRVMvaHZlcUhWZEpGNlk2Q21hb244a0hzeUZDZmk0b1htTXN0VCtCWGpIanZlbnZuVUI5MkYrNUVTZFNSTTVmRFpQWmtDL3ZHV1JYdXdGYmxqc1hFNTNpYnpkSE5OQ3JlS3J4dzlXWVhtdWNvWUZQQTAwOG1pUENhMm9UK1lIaDhsN2xCaENCVS9QdFVSQzVacENvVHhKQUZzZVdNU01zbGVPM3pFVFlMYUM1TXBVT3lEV21FY0F1bkdOang0Q01BQVRianRqOTFpZ2Q0UStHWmtqSVhGMGRGYnpCK2RXVEd4eDBPdGw3Y3lwSWx1SEIvYUQvNjFzVGs0a1gyWHhvMm8yRHA4ZWNRc3RXMkRVbVBtcnBNcXg1WlZNT1U3dW4yZ1kzam5ibGhvZmlCS1BocDN4cWRjeGdId2lWWHNKWk1OK1BPQW5Mb0gxZjhLTlVyM2FVNktNVjcvOFZNMzIrRC8zNytlOTdOQ0tYN3U1T29KcFhpSjNGQ2ZmNHhSQUVscjI4Tko3TERDbUlVNFZCSlNiYlhnaWlvNVNXb0wwTmFwMzNneTBsYjN1MjFDaGZMTXFLN2UzUHp0dXppb2NCMTNic2t6ZU1kMnhLYWVuaW12eUtCQzJKS1hrQXNTdVVHU3Nia2FydFJjL0w5bUVZZ1cvdkVMbndHOGc1RGFaVW1MOXVna2tPbVlDajl6akFzNjhkTmkxSk5RY3dNL3JPbERlenUvUDhDNytxb1djQkpYQWpONGVoUDE3clR3bi9Hd01YNGJrdlBQYWVYV2MxV2lDQjJUZmtyZVN5aC90VmU0amNqMFZnSFVveWxnaStNQzdpZkhYOFFVbHluSW4zQWw1cStUK3R0cXBjWnovQ3FwbnZxYXNNWUk1WGxZVlZSN0p6bDhWQ0NaaTFMUWMxVG5qemJKbzczQkt2eDNScXNhblpFZENwcnMzS2xmMG5DUFJqdVFXRVNqSVVhQ2xub3ZRQkt1N2RNbXl1Tmo2UXRoWG0xaGVHUWxQTENhZFJKOWRVNW00SHgyUEhIbWRHWDJheDF4MkVGQVdrOUNZMEpnRk1vdHZVSXJPRkFvL0JkRlFpanBUZkJIZTZqeUdlWHA4MzB1KzhPKzFoUWhZdW1KenRSRDNMdVpGV2hCbG50VTg5ejkvM0JiT3hKaFNQUElDcHFLOHZHUFhyU25VZjhFQ1ErOWpZdmgxVUplWld6b1pJeExsVEFJOEpOQ2tWNDVrRnBLMzVkYTM2Qk02T2g1MTlBM0NSTVppcGN0aHg0L091N2gyZEJFZUV1R3VvS1krYUtMNWlMNUMwRUF4ZWM2amZOSUJjTXRCTnl4WmU2WVJYOEgrbnRRa1lMVG1vREhTcjN3WUJYQnJITEQyOWJCa1pXNGlXR3ZzemJ0MFRkcTV5cHdTZmZiemxEcW5jajBlZ0srMFRRSFYydFN2WTh2aXBFUzFWS2x1R3J3TENKTzB4anExUGRFZkFSaz0=
-            - Name: DEBUG
-              Value: express:router
+            - Name: AWS_RENTAL_SQS_QUEUE
+              Value: "Get-This-From-Dashboard"
+            - Name: UNICORN_RENTAL_RETURN_ENDPOINT
+              Value: "Get-This-From-Dashboard"
+            - Name: REDIS_URL
+              Value: "Get-This-From-Dashboard"
+            - Name: AWS_DEFAULT_REGION
+              Value: "Your-Game-Region"
       Volumes:
         - Name: my-vol
