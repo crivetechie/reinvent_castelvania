@@ -9,4 +9,6 @@ RUN pip install --no-cache-dir -r requirements.txt
 
 COPY . .
 
+RUN chmod +x /usr/src/app/bin/rampage
+
 ENTRYPOINT [ "python", "./app.py" ]
